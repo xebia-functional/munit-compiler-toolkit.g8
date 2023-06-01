@@ -17,6 +17,7 @@ ThisBuild / developers := List(
     url("$authorWebsite$")
   )
 )
+ThisBuild / version := "0.1.0-SNAPSHOT"
 ThisBuild / githubWorkflowTargetTags ++= Seq("v*")
 ThisBuild / githubWorkflowPublishTargetBranches :=
   Seq(RefPredicate.StartsWith(Ref.Tag("v")))
@@ -53,7 +54,6 @@ lazy val root = project
   .settings(commonSettings)
   .settings(
     name := "$projectBaseName$-root",
-    version := "0.1.0-SNAPSHOT",
     publish / skip := true,
   )
   .aggregate(`$projectBaseName$-lib`, `$projectBaseName$-plugin`, `$projectBaseName$-example`, `documentation`)
@@ -68,6 +68,17 @@ lazy val `$projectBaseName$-plugin` = project
   .settings(commonSettings)
   .dependsOn(`$projectBaseName$-lib`)
   .enablePlugins(SbtMunitCompilerToolkitPlugin)
+
+lazy val `$projectBaseName$-examples` = project
+  .in(file("./$projectBaseName$-examples"))
+  .dependsOn(`$projectBaseName$-lib`, `$projectBaseName$-plugin`)
+  .settings(
+    publish / skip := true,
+    autoCompilerPlugins := true,
+    Compile / fork := true,
+    Compile / scalacOptions += s"""-Xplugin:${($projectBaseName$-plugin / Compile / packageBin).value}""",
+    Compile / scalacOptions += s"""-Xprint:$name;format="lower,hyphen"$phase""",
+  )
 
 lazy val documentation = project
   .dependsOn(`$projectBaseName$-lib`, `$projectBaseName$-plugin`)

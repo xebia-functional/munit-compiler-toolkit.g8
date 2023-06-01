@@ -1,25 +1,20 @@
 package $package$
 
+import com.xebia.functional.munitCompilerToolkit.CompilerSuite
+import dotty.tools.dotc.core.Contexts.Context
 import munit.SnapshotSuite
-import com.xebia.functional.munitCompilerToolkit.CompilerFixtures
 
+class $projectPluginClassName$IntegrationSuite extends SnapshotSuite, CompilerSuite:
 
-//TODO: Add AutoDerivation to test suite class ; and compilerContextFixture  and
-// def continuationsCompilerSnapshot(source: String)(using Context): (String, String) =
-//     val p = Promise[(String, String)]
-//     checkContinuations(source)((t, _) =>
-//       p.complete(
-//         Try(
-//           (
-//             compileSourceIdentifier.replaceAllIn(t.toString, ""),
-//             compileSourceIdentifier.replaceAllIn(t.show, "")))))
-// p.future.value.get.get
-//to
-//CompilerSuite in munit-compiler-toolkit-testkit for use here. 
-class $projectPluginClassName$IntegrationSuite extends SnapshotSuite, CompilerFixtures, CompilerSuite:
-
-  snapshotTest("The plugin should put a LoggingInterceptor around calls to methods"){
-    
+  snapshotTest("The example plugin should put a LoggingInterceptor around calls to methods"){
     given Context = compilerContext()
-
+    val source = """|def example(s: String): String =
+                    |  s
+                    |object Thing{
+                    |  val x = example("test")
+                    |}
+                    |""".stripMargin
+    compileToStringTreeAndStringContext(source, Option("pickleQuotes"))
   }
+
+end $projectPluginClassName$IntegrationSuite
