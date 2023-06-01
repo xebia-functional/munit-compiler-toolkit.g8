@@ -1,6 +1,7 @@
 package $package$
 
 import com.xebia.functional.munitCompilerToolkit.CompilerSuite
+import dotty.tools.dotc.core.Contexts.Context
 
 
 /**
@@ -29,14 +30,13 @@ class $projectPluginClassName$Suite extends CompilerSuite:
          |  final lazy module val Thing: Thing = new Thing()
          |  @SourceFile("compileFromStringscala") final module class Thing() extends Object() { this: Thing.type =>
          |    private def writeReplace(): AnyRef = new scala.runtime.ModuleSerializationProxy(classOf[Thing.type])
-         |    val x: String = new $package$.LoggingInterceptor[String](example("test")).apply("example")(["test" : Any]*)
+         |    val x: String = new com.example.compiler.plugins.LoggingInterceptor[String](example("test")).apply("example")(["test" : Any]*)
          |  }
          |  final lazy module val compileFromStringpackage:
-         |    compileFromStringpackage
-         |   = new compileFromStringpackage()
+         |    compileFromStringpackage = new compileFromStringpackage()
          |  @SourceFile("compileFromStringscala") final module class
-         |    compileFromStringpackage
-         |  () extends Object() { this: compileFromStringpackage.type =>
+         |    compileFromStringpackage() extends Object() {
+         |    this: compileFromStringpackage.type =>
          |    private def writeReplace(): AnyRef =
          |      new scala.runtime.ModuleSerializationProxy(classOf[compileFromStringpackage.type])
          |    def example(s: String): String = s

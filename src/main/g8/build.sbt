@@ -7,7 +7,9 @@ ThisBuild / homepage := Some(
   url("$projectHomepage$")
 )
 ThisBuild / licenses := List(
-  $license$
+  $licenseKey$ -> new URL(
+    $licenseURL$
+  )
 )
 ThisBuild / developers := List(
   Developer(
@@ -17,6 +19,17 @@ ThisBuild / developers := List(
     url("$authorWebsite$")
   )
 )
+
+//YOU MAY REMOVE THIS IF YOU HAVE THE PROJECT IN A LOCAL GIT CHECKOUT OF A REMOTE REPOSITORY
+ThisBuild / scmInfo := Some(
+  ScmInfo(
+    url(
+      "https://github.com/$organizationName;format="lower,hyphen"$/$name;format="lower,hyphen"$"
+    ),
+    "scm:git:https://github.com/$organizationName;format="lower,hyphen"$/$name;format="lower,hyphen"$.git"
+  )
+)
+//END-YOU MAY REMOVE THIS IF YOU HAVE THE PROJECT IN A LOCAL GIT CHECKOUT OF A REMOTE REPOSITORY
 ThisBuild / version := "0.1.0-SNAPSHOT"
 ThisBuild / githubWorkflowTargetTags ++= Seq("v*")
 ThisBuild / githubWorkflowPublishTargetBranches :=
@@ -25,17 +38,16 @@ ThisBuild / githubWorkflowPublish := Seq(
   WorkflowStep.Sbt(
     List("ci-release"),
     env = Map(
-      "PGP_PASSPHRASE" -> "${{ secrets.PGP_PASSPHRASE }}",
-      "PGP_SECRET" -> "${{ secrets.PGP_SECRET }}",
-      "SONATYPE_PASSWORD" -> "${{ secrets.SONATYPE_PASSWORD }}",
-      "SONATYPE_USERNAME" -> "${{ secrets.SONATYPE_USERNAME }}"
+      "PGP_PASSPHRASE" -> "\${{ secrets.PGP_PASSPHRASE }}",
+      "PGP_SECRET" -> "\${{ secrets.PGP_SECRET }}",
+      "SONATYPE_PASSWORD" -> "\${{ secrets.SONATYPE_PASSWORD }}",
+      "SONATYPE_USERNAME" -> "\${{ secrets.SONATYPE_USERNAME }}"
     )
   )
 )
-
 addCommandAlias(
   "ci-test",
-  "scalafmtCheckAll; scalafmtSbtCheck; github; documentation / mdoc; root / test"
+  "scalafmtCheckAll; scalafmtSbtCheck; github; documentation / mdoc; root / Test / test"
 )
 addCommandAlias("ci-it-test", "$projectBaseName$-plugin / IntegrationTest / test")
 addCommandAlias("ci-docs", "github; documentation / mdoc")
@@ -43,10 +55,7 @@ addCommandAlias("ci-publish", "github; ci-release")
 
 lazy val commonSettings = Seq(
   organizationName := "$organizationName$",
-  startYear := Some(2023),
-  licenses += ("Apache-2.0", new URL(
-    "https://www.apache.org/licenses/LICENSE-2.0.txt"
-  ))
+  startYear := Some(2023)
 )
 
 lazy val root = project
@@ -56,11 +65,11 @@ lazy val root = project
     name := "$projectBaseName$-root",
     publish / skip := true,
   )
-  .aggregate(`$projectBaseName$-lib`, `$projectBaseName$-plugin`, `$projectBaseName$-example`, `documentation`)
+  .aggregate(`$projectBaseName$-lib`, `$projectBaseName$-plugin`, `$projectBaseName$-examples`, `documentation`)
 
 lazy val `$projectBaseName$-lib` = project
   .in(file("./$projectBaseName$-lib"))
-  .settings(autoAPIMappings := true,)
+  .settings(autoAPIMappings := true)
   .settings(commonSettings)
 
 lazy val `$projectBaseName$-plugin` = project
@@ -76,7 +85,7 @@ lazy val `$projectBaseName$-examples` = project
     publish / skip := true,
     autoCompilerPlugins := true,
     Compile / fork := true,
-    Compile / scalacOptions += s"""-Xplugin:${($projectBaseName$-plugin / Compile / packageBin).value}""",
+    Compile / scalacOptions += s"""-Xplugin:\${(`$projectBaseName$-plugin` / Compile / packageBin).value}""",
     Compile / scalacOptions += s"""-Xprint:$name;format="lower,hyphen"$phase""",
   )
 

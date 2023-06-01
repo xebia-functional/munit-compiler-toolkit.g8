@@ -12,7 +12,7 @@ import dotty.tools.dotc.transform.Staging
 
 class $projectPluginClassName$ extends StandardPlugin:
   val name: String = "$projectPluginClassName$"
-  override val description: String = "$name"
+  override val description: String = "$name$"
   override def init(options: List[String]): List[PluginPhase] =
     $projectPluginClassName$Phase() :: Nil
 end $projectPluginClassName$

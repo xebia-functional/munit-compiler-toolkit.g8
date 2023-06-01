@@ -2,7 +2,7 @@ import sbt._
 object Dependencies {
 
   object Versions {
-    val sbtMunitCompilerToolkit = $munitCompilerToolkitVersion$
+    val sbtMunitCompilerToolkit = $sbtMunitCompilerToolkitVersion$
     val sbtCiRelease = $sbtCiReleaseVersion$
     val sbtGithubActions = $sbtGithubActionsVersion$
     val sbtDependencyUpdates = $sbtDependencyUpdatesVersion$

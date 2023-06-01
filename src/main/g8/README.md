@@ -1,6 +1,6 @@
 # $name;format="lower,hyphen"$
 
-$description
+$description$
 
 ## Project Structure
 
@@ -26,6 +26,28 @@ project has three subprojects:
 
   A project demonstrating the compiler plugin. Contains fully compiled
   use-case demonstractions of $name;format="lower,hyphen"$-plugin.
+
+## Running the tests
+
+To run the tests, use:
+
+```scala
+\$sbt
+> $name;format="lower,hyphen"$-plugin / Test / test
+> $name;format="lower,hyphen"$-plugin / IntegrationTest / test
+```
+
+_It is important to include the `Test` or `IntegrationTest` scope._
+
+## Running the examples
+
+To run the examples, use:
+
+```scala
+\$sbt
+> $name;format="lower,hyphen"$-example / Compile / run
+```
+_It is important to include the `Compile` scope._
 
 ## Included Sbt Plugins
 
